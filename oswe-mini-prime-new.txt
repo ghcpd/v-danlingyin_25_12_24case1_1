@@ -1,0 +1,260 @@
+oswe-mini-prime-new：：
+
+User: Prompt —Documentation & Knowledge (Incorrect Docs)
+You are a senior software engineer and technical documentation auditor.
+Your task is to identify incorrect documentation, where documented parameters, value ranges, or defaults do not match the actual implementation in code.
+--------------------------------------------------------------------------------
+Your responsibilities:
+1. Identify incorrect documentation
+- Review all provided documentation files (e.g. README.md)
+- Review the corresponding source code files
+- Identify cases where documentation is factually incorrect, including:
+- Wrong parameter meaning
+- Wrong value range
+- Wrong default value
+- Missing constraints that exist in code
+For each issue, list:
+- Documentation file name
+- Section or heading
+- Parameter name
+- What the documentation claims
+- What the code actually enforces
+--------------------------------------------------------------------------------
+2. Provide citation evidence
+For every identified issue, you MUST provide citations:
+- Exact code reference (file name + line numbers)
+- Exact documentation reference (file name + section or quoted text)
+--------------------------------------------------------------------------------
+3. Classify severity
+Classify each issue as:
+- High — leads to incorrect API usage or runtime errors
+- Medium — misleading but does not immediately break functionality
+- Low — minor but technically inaccurate
+--------------------------------------------------------------------------------
+4. Produce corrected documentation
+Generate:
+- README_backup.md→ unchanged copy of original documentation
+- README.md → corrected documentation that matches the code exactly
+Rules:
+- Do NOT modify source code
+- Only documentation may be changed
+- All parameter descriptions and value ranges must be precise
+--------------------------------------------------------------------------------
+5. Generate an incorrect documentation report (report.json)
+Use the following structure:
+{
+  "summary": {
+    "total_issues": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "",
+      "actual_value": "",
+      "citations": {
+        "doc": "",
+        "code": ""
+      },
+      "fix_summary": ""
+    }
+  ]
+}
+
+--------------------------------------------------------------------------------
+6. Generate citation evidence file
+Produce citations.md containing:
+- Side-by-side comparison of:
+- Documentation statement
+- Code implementation
+- Clear explanation of why the documentation is incorrect
+--------------------------------------------------------------------------------
+7. Generate a simple audit README
+Produce AUDIT_README.md explaining:
+- What was audited
+- What kind of documentation errors were found
+- How citations were derived
+- How reviewers can verify correctness
+--------------------------------------------------------------------------------
+📌 Rules for the Model
+- MUST NOT hallucinate parameters not present in code
+- MUST NOT invent files that do not exist
+- MUST provide exact citations (file + line numbers or quoted text)
+- MUST NOT modify code
+- MUST keep output concise, structured, and verifiable
+
+GitHub Copilot: Let me inspect README.md and input.ts to find factual mismatches; I'll start by reading both files.
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/input.ts)
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/readme.md)
+
+Proceeding to create a short plan and mark the audit step in-progress.
+
+Created 7 todos
+
+Perfect! I found that README documents `retryCount` range and default that don't match the implementation. My next step is to create `README_backup.md` as an unchanged copy.
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/README_backup.md)
+
+Starting: *Update `README.md` to match code* (3/7)
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Starting: *Create `report.json` with issues* (4/7)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/report.json)
+
+Starting: *Create `citations.md` with side-by-side evidence* (5/7)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/citations.md)
+
+Starting: *Create `AUDIT_README.md` summary* (6/7)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-prime-new/AUDIT_README.md)
+
+Starting: *Wrap up and deliver artifacts* (7/7)
+
+Completed: *Wrap up and deliver artifacts* (7/7)
+
+Perfect! I found that the README documented a retry range of 0–10 and default 1 while the code requires 1–5 with default 3; I backed up the original README and produced corrected docs, a machine-readable report, and citation evidence. My next step is to hand this over—tell me if you'd like a PR created or additional checks run.## ✅ Summary of findings & actions
+
+Perfect! I found that README.md documents `retryCount` as **Range: 0–10, default 1**, but the implementation enforces **1–5** and uses **3** as the default. I backed up the original README and produced corrected documentation plus a structured report and supporting citations.
+
+---
+
+## 🔎 Identified documentation issues
+
+1) Issue: Incorrect range and default in configuration table  
+- Doc file: README.md  
+- Section: Configuration  
+- Parameter: `retryCount`  
+- What documentation claims: "Range: **0–10**, default is **1**"  
+- What code enforces: Range **1–5**, default **3**; throws if value <1 or >5  
+- Severity: **High** (can cause runtime errors)  
+- Citations:
+  - Doc: README.md — configuration table row: `| retryCount | number | Number of retry attempts. Range: **0–10**, default is **1** |` (table entry)
+  - Code: input.ts — JSDoc (lines 5–7): "Must be between 1 and 5. Default is 3."  
+    and implementation:
+    - default assignment (line 16): `const retryCount = options?.retryCount ?? 3;`
+    - validation (lines 18–19): `if (retryCount < 1 || retryCount > 5) { throw new Error("retryCount must be between 1 and 5"); }`
+
+2) Issue: Example demonstrates invalid usage (`retryCount: 0`)  
+- Doc file: README.md  
+- Section: Example  
+- Parameter: `retryCount`  
+- What documentation shows: Example `requestWithRetry("/api/data", { retryCount: 0 })`  
+- What code enforces: `retryCount = 0` is rejected and causes an exception (must be 1–5)  
+- Severity: **High** (example leads to runtime error)  
+- Citations:
+  - Doc: README.md — Example block: `requestWithRetry("/api/data", { retryCount: 0 })`
+  - Code: input.ts — validation (lines 18–19): `if (retryCount < 1 || retryCount > 5) { throw new Error("retryCount must be between 1 and 5"); }`
+
+---
+
+## 📁 Files added / changes made (documentation only)
+- README_backup.md — unchanged copy of original README (preserved)
+- README.md — updated to match code (range 1–5, default 3, and corrected examples)
+- report.json — structured issue report (machine-readable)
+- citations.md — side-by-side documentation vs code evidence and explanation
+- AUDIT_README.md — short audit summary and verification steps
+
+All changes were limited to documentation only; source code was NOT modified.
+
+---
+
+## report.json (structured summary)
+Generated at report.json with this content (key fields):
+
+{
+  "summary": { "total_issues": 2, "high": 2, "medium": 0, "low": 0 },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "Range: 0–10, default is 1",
+      "actual_value": "Range enforced 1–5, default is 3 (throws if outside 1–5)",
+      "citations": {
+        "doc": "README.md — configuration table entry for retryCount",
+        "code": "input.ts — JSDoc lines 5-7; default assignment line 16; validation lines 18-19"
+      },
+      "fix_summary": "Update READMEs to indicate Range: 1–5 and default: 3; document that out-of-range values cause an error."
+    },
+    {
+      "id": 2,
+      "doc_file": "README.md",
+      "section": "Example",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Example (leads to runtime error)",
+      "severity": "High",
+      "documented_value": "Example uses 'retryCount: 0'",
+      "actual_value": "Passing retryCount 0 will cause a runtime error because valid range is 1–5",
+      "citations": {
+        "doc": "README.md — Example block with retryCount: 0",
+        "code": "input.ts — validation lines 18-19"
+      },
+      "fix_summary": "Replace example with default usage or a valid explicit value within 1–5."
+    }
+  ]
+}
+
+(See the report.json file in the workspace for exact JSON.)
+
+---
+
+## citations.md
+Created at citations.md with side-by-side comparisons:
+- Documentation statement (quoted from README.md)
+- Exact code snippets and line references from input.ts
+- Short explanation why the doc is incorrect
+
+(Please open citations.md to review the verbatim excerpts and explanation.)
+
+---
+
+## AUDIT_README.md
+Created at AUDIT_README.md, including:
+- What was audited
+- Short list of issues found
+- How citations were derived
+- How reviewers can verify correctness (including a quick runtime check suggestion)
+
+---
+
+## How you can verify quickly ✅
+1. Inspect input.ts:
+   - JSDoc lines 5–7: states 1–5 and default 3.
+   - line 16: default assigned as 3.
+   - lines 18–19: validation throws if <1 or >5.
+2. Open README.md (updated) and README_backup.md (original) to compare.
+3. Run a quick check in Node/REPL:
+   - `requestWithRetry('/api', { retryCount: 0 })` → should throw.
+   - `requestWithRetry('/api')` → should return `{ url: '/api', retryCount: 3 }`.
+   (Verification steps noted in AUDIT_README.md.)
+
+---
+
+If you'd like, I can:
+- Open a PR with these documentation changes, or
+- Run an automated check to find other docs/code mismatches across the repo.
+
+Would you like me to create a PR with these doc fixes?
+
+Made changes.
