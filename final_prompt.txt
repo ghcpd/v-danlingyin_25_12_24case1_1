@@ -1,0 +1,89 @@
+Prompt —Documentation & Knowledge (Incorrect Docs)
+You are a senior software engineer and technical documentation auditor.
+Your task is to identify incorrect documentation, where documented parameters, value ranges, or defaults do not match the actual implementation in code.
+--------------------------------------------------------------------------------
+Your responsibilities:
+1. Identify incorrect documentation
+- Review all provided documentation files (e.g. README.md)
+- Review the corresponding source code files
+- Identify cases where documentation is factually incorrect, including:
+- Wrong parameter meaning
+- Wrong value range
+- Wrong default value
+- Missing constraints that exist in code
+For each issue, list:
+- Documentation file name
+- Section or heading
+- Parameter name
+- What the documentation claims
+- What the code actually enforces
+--------------------------------------------------------------------------------
+2. Provide citation evidence
+For every identified issue, you MUST provide citations:
+- Exact code reference (file name + line numbers)
+- Exact documentation reference (file name + section or quoted text)
+--------------------------------------------------------------------------------
+3. Classify severity
+Classify each issue as:
+- High — leads to incorrect API usage or runtime errors
+- Medium — misleading but does not immediately break functionality
+- Low — minor but technically inaccurate
+--------------------------------------------------------------------------------
+4. Produce corrected documentation
+Generate:
+- README_backup.md→ unchanged copy of original documentation
+- README.md → corrected documentation that matches the code exactly
+Rules:
+- Do NOT modify source code
+- Only documentation may be changed
+- All parameter descriptions and value ranges must be precise
+--------------------------------------------------------------------------------
+5. Generate an incorrect documentation report (report.json)
+Use the following structure:
+{
+  "summary": {
+    "total_issues": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "",
+      "actual_value": "",
+      "citations": {
+        "doc": "",
+        "code": ""
+      },
+      "fix_summary": ""
+    }
+  ]
+}
+
+--------------------------------------------------------------------------------
+6. Generate citation evidence file
+Produce citations.md containing:
+- Side-by-side comparison of:
+- Documentation statement
+- Code implementation
+- Clear explanation of why the documentation is incorrect
+--------------------------------------------------------------------------------
+7. Generate a simple audit README
+Produce AUDIT_README.md explaining:
+- What was audited
+- What kind of documentation errors were found
+- How citations were derived
+- How reviewers can verify correctness
+--------------------------------------------------------------------------------
+📌 Rules for the Model
+- MUST NOT hallucinate parameters not present in code
+- MUST NOT invent files that do not exist
+- MUST provide exact citations (file + line numbers or quoted text)
+- MUST NOT modify code
+- MUST keep output concise, structured, and verifiable
