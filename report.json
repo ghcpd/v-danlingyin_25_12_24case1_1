@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "total_issues": 3,
+    "high": 2,
+    "medium": 1,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "Range: 0–10",
+      "actual_value": "Range: 1–5 (throws if outside)",
+      "citations": {
+        "doc": "README_backup.md:11 ('| retryCount | number | Number of retry attempts. Range: **0–10**, default is **1** |')",
+        "code": "input.ts:18-19 ('if (retryCount < 1 || retryCount > 5) { throw new Error(\"retryCount must be between 1 and 5\"); }')"
+      },
+      "fix_summary": "Update README to state the correct range (1–5) and note that out-of-range values throw an error."
+    },
+    {
+      "id": 2,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "Medium",
+      "documented_value": "Default: 1",
+      "actual_value": "Default: 3 (implementation default)",
+      "citations": {
+        "doc": "README_backup.md:11 ('default is **1**')",
+        "code": "input.ts:16 ('const retryCount = options?.retryCount ?? 3;') and input.ts:7 (JSDoc: 'Default is 3.')"
+      },
+      "fix_summary": "Change documented default to 3 and (optionally) show an example that relies on the default."
+    },
+    {
+      "id": 3,
+      "doc_file": "README.md",
+      "section": "Example",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation (invalid example)",
+      "severity": "High",
+      "documented_value": "Example uses retryCount: 0",
+      "actual_value": "Passing 0 will throw at runtime (allowed values are 1–5)",
+      "citations": {
+        "doc": "README_backup.md:16-17 ('requestWithRetry("/api/data", {\n  retryCount: 0\n});')",
+        "code": "input.ts:18-19 ('if (retryCount < 1 || retryCount > 5) { throw new Error(\"retryCount must be between 1 and 5\"); }')"
+      },
+      "fix_summary": "Replace the invalid example with one that either omits the option (to show the default) or uses a valid retryCount (1–5)."
+    }
+  ]
+}

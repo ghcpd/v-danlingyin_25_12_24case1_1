@@ -1,0 +1,176 @@
+oswe-mini-m23a1s255：：
+
+User: hi
+
+GitHub Copilot: Hi — how can I help you today?
+
+- Open a file, run tests, fix a bug, or implement a feature?
+
+User: Prompt —Documentation & Knowledge (Incorrect Docs)
+You are a senior software engineer and technical documentation auditor.
+Your task is to identify incorrect documentation, where documented parameters, value ranges, or defaults do not match the actual implementation in code.
+--------------------------------------------------------------------------------
+Your responsibilities:
+1. Identify incorrect documentation
+- Review all provided documentation files (e.g. README.md)
+- Review the corresponding source code files
+- Identify cases where documentation is factually incorrect, including:
+- Wrong parameter meaning
+- Wrong value range
+- Wrong default value
+- Missing constraints that exist in code
+For each issue, list:
+- Documentation file name
+- Section or heading
+- Parameter name
+- What the documentation claims
+- What the code actually enforces
+--------------------------------------------------------------------------------
+2. Provide citation evidence
+For every identified issue, you MUST provide citations:
+- Exact code reference (file name + line numbers)
+- Exact documentation reference (file name + section or quoted text)
+--------------------------------------------------------------------------------
+3. Classify severity
+Classify each issue as:
+- High — leads to incorrect API usage or runtime errors
+- Medium — misleading but does not immediately break functionality
+- Low — minor but technically inaccurate
+--------------------------------------------------------------------------------
+4. Produce corrected documentation
+Generate:
+- README_backup.md→ unchanged copy of original documentation
+- README.md → corrected documentation that matches the code exactly
+Rules:
+- Do NOT modify source code
+- Only documentation may be changed
+- All parameter descriptions and value ranges must be precise
+--------------------------------------------------------------------------------
+5. Generate an incorrect documentation report (report.json)
+Use the following structure:
+{
+  "summary": {
+    "total_issues": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "",
+      "actual_value": "",
+      "citations": {
+        "doc": "",
+        "code": ""
+      },
+      "fix_summary": ""
+    }
+  ]
+}
+
+--------------------------------------------------------------------------------
+6. Generate citation evidence file
+Produce citations.md containing:
+- Side-by-side comparison of:
+- Documentation statement
+- Code implementation
+- Clear explanation of why the documentation is incorrect
+--------------------------------------------------------------------------------
+7. Generate a simple audit README
+Produce AUDIT_README.md explaining:
+- What was audited
+- What kind of documentation errors were found
+- How citations were derived
+- How reviewers can verify correctness
+--------------------------------------------------------------------------------
+📌 Rules for the Model
+- MUST NOT hallucinate parameters not present in code
+- MUST NOT invent files that do not exist
+- MUST provide exact citations (file + line numbers or quoted text)
+- MUST NOT modify code
+- MUST keep output concise, structured, and verifiable
+
+GitHub Copilot: Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/input.ts)
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/readme.md)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/README_backup.md)
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/report.json)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/citations.md)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1224/case1/oswe-mini-m23a1s255/AUDIT_README.md)
+
+Findings (concise)
+- I audited README.md (original preserved as README_backup.md) against the implementation in input.ts.
+- Summary: 3 issues found — 2 High, 1 Medium. All issues corrected in README.md; originals are in README_backup.md.
+
+Issues (each includes exact citations)
+1) Range — HIGH
+- Doc file / section: README.md — Configuration table  
+- Parameter: `retryCount`  
+- Documentation claims: "Range: 0–10"  
+  - Citation (doc): `README_backup.md:11` — "| retryCount | number | Number of retry attempts. Range: **0–10**, default is **1** |"  
+- Code enforces: allowed values 1–5 (throws if outside)  
+  - Citation (code): `input.ts:18-19` — "if (retryCount < 1 || retryCount > 5) { throw new Error(\"retryCount must be between 1 and 5\"); }"  
+- Impact: High — following the documented range can cause runtime errors.  
+- Fix summary: document range as 1–5 and state that out-of-range values throw.
+
+2) Default value — MEDIUM
+- Doc file / section: README.md — Configuration table  
+- Parameter: `retryCount`  
+- Documentation claims: "default is 1"  
+  - Citation (doc): `README_backup.md:11` — "... default is **1**"  
+- Code enforces: default is 3 (when option omitted)  
+  - Citation (code): `input.ts:16` — "const retryCount = options?.retryCount ?? 3;" (also JSDoc `input.ts:5-7`)  
+- Impact: Medium — behavior differs from documentation (misleading default).  
+- Fix summary: set documented default to 3 and show default-based example.
+
+3) Example uses an invalid value — HIGH
+- Doc file / section: README.md — Example  
+- Parameter: `retryCount`  
+- Documentation/example: example sets `retryCount: 0`  
+  - Citation (doc): `README_backup.md:16-17` — "requestWithRetry(\"/api/data\", { retryCount: 0 });"  
+- Code enforces: 0 is rejected (throws)  
+  - Citation (code): `input.ts:18-19` — range check + error  
+- Impact: High — example will crash at runtime.  
+- Fix summary: replace example with either (a) no options (shows default = 3) or (b) a valid value in 1–5.
+
+Files I created/updated
+- Created: README_backup.md (original preserved), report.json, citations.md, AUDIT_README.md  
+- Updated: README.md — now matches input.ts (range 1–5, default 3, corrected examples)
+
+Where to verify (quick)
+- Open input.ts — check lines cited: default (line 16), range check (lines 18–19), JSDoc (lines 5–7).  
+- Open README_backup.md — see original incorrect doc at the cited lines.  
+- Open README.md — verify corrected text and examples.  
+- Runtime check: calling requestWithRetry('/x', { retryCount: 0 }) throws (expected).
+
+Artifacts delivered (in workspace)
+- README.md (corrected)
+- README_backup.md (original)
+- report.json (structured issues)
+- citations.md (side-by-side evidence + explanation)
+- AUDIT_README.md (how to review & verify)
+
+Next recommended actions
+- Accept the README.md changes and add a unit test that asserts allowed bounds and default behavior (I can add the test and a PR if you want).
+
+Would you like me to open a PR with these documentation changes and add a unit test?
+
+Made changes.
