@@ -1,0 +1,40 @@
+{
+  "summary": {
+    "total_issues": 2,
+    "high": 2,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "README.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "Range: 0–10, default is 1",
+      "actual_value": "Range enforced 1–5, default is 3 (throws if outside 1–5)",
+      "citations": {
+        "doc": "README.md — Configuration table line: '| retryCount | number | Number of retry attempts. Range: **0–10**, default is **1** |'",
+        "code": "input.ts — JSDoc: lines 5-7 ('Must be between 1 and 5. Default is 3.') and implementation: line 16 (default assignment 'const retryCount = options?.retryCount ?? 3;') and lines 18-19 (validation 'if (retryCount < 1 || retryCount > 5) { throw new Error("retryCount must be between 1 and 5"); }')"
+      },
+      "fix_summary": "Update README Configuration to state Range: 1–5 and default: 3; document that out-of-range values will cause an error."
+    },
+    {
+      "id": 2,
+      "doc_file": "README.md",
+      "section": "Example",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Example (leads to runtime error)",
+      "severity": "High",
+      "documented_value": "Example uses 'retryCount: 0'",
+      "actual_value": "Passing retryCount 0 will cause a runtime error because valid range is 1–5",
+      "citations": {
+        "doc": "README.md — Example lines: 'requestWithRetry("/api/data", { retryCount: 0 })'",
+        "code": "input.ts — validation lines 18-19 ('if (retryCount < 1 || retryCount > 5) { throw new Error("retryCount must be between 1 and 5"); }')"
+      },
+      "fix_summary": "Replace example with either default usage (no retryCount) or a valid value within 1–5."
+    }
+  ]
+}
