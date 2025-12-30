@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "total_issues": 3,
+    "high": 3,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "readme.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Value Range",
+      "severity": "High",
+      "documented_value": "Range: 0–10",
+      "actual_value": "Range: 1–5",
+      "citations": {
+        "doc": "readme.md, Configuration section, retryCount parameter: 'Range: **0–10**'",
+        "code": "input.ts, lines 6-8: JSDoc comment states 'Must be between 1 and 5'; line 17: validation enforces 'if (retryCount < 1 || retryCount > 5)'"
+      },
+      "fix_summary": "Documentation claims range is 0–10 but code enforces 1–5. Updated to match code validation."
+    },
+    {
+      "id": 2,
+      "doc_file": "readme.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Default Value",
+      "severity": "High",
+      "documented_value": "default is 1",
+      "actual_value": "default is 3",
+      "citations": {
+        "doc": "readme.md, Configuration section, retryCount parameter: 'default is **1**'",
+        "code": "input.ts, line 7: JSDoc comment states 'Default is 3'; line 15: code uses 'const retryCount = options?.retryCount ?? 3'"
+      },
+      "fix_summary": "Documentation claims default is 1 but code uses default of 3. Updated to match implementation."
+    },
+    {
+      "id": 3,
+      "doc_file": "readme.md",
+      "section": "Example",
+      "parameter": "retryCount",
+      "issue_type": "Invalid Example Code",
+      "severity": "High",
+      "documented_value": "Example shows retryCount: 0",
+      "actual_value": "retryCount: 0 throws error 'retryCount must be between 1 and 5'",
+      "citations": {
+        "doc": "readme.md, Example section: Shows 'retryCount: 0' as valid usage",
+        "code": "input.ts, lines 17-19: Validation throws error when retryCount < 1"
+      },
+      "fix_summary": "Example demonstrates invalid usage (retryCount: 0) that would cause runtime error. Updated to show valid value."
+    }
+  ]
+}
