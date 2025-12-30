@@ -1,0 +1,40 @@
+{
+  "summary": {
+    "total_issues": 2,
+    "high": 2,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "doc_file": "readme.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "default is 1",
+      "actual_value": "default is 3",
+      "citations": {
+        "doc": "Number of retry attempts. Range: **0–10**, default is **1**",
+        "code": "const retryCount = options?.retryCount ?? 3;"
+      },
+      "fix_summary": "Updated default value to 3"
+    },
+    {
+      "id": 2,
+      "doc_file": "readme.md",
+      "section": "Configuration",
+      "parameter": "retryCount",
+      "issue_type": "Incorrect Documentation",
+      "severity": "High",
+      "documented_value": "Range: 0–10",
+      "actual_value": "Range: 1-5",
+      "citations": {
+        "doc": "Number of retry attempts. Range: **0–10**, default is **1**",
+        "code": "if (retryCount < 1 || retryCount > 5) { throw new Error(\"retryCount must be between 1 and 5\"); }"
+      },
+      "fix_summary": "Updated range to 1-5"
+    }
+  ]
+}
